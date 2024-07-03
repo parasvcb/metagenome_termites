@@ -1,0 +1,17 @@
+python bin/A6_getting_reads\>300bp_and_their_contig-ORF_fractions.py query/modified/contigs query/modified/predicted_genes.prot results/kaiju_filterreads/Notarthropod results/protists_genera results/
+Contigs from kaiju were 889
+contigs_having_ORFS were 648
+length>=100 orfs were 539, and less than were 316
+#protists
+
+python bin/A6_getting_reads\>300bp_and_their_contig-ORF_fractions.py query/modified/contigs query/modified/predicted_genes.prot results/kaiju_filterreads/Notarthropod Bacteria results/
+Contigs from kaiju were 334741
+contigs_having_ORFS were 327153
+length>=100 orfs were 377502, and less than were 149529
+#Bacteria
+
+python bin/A6_getting_reads\>300bp_and_their_contig-ORF_fractions.py query/modified/contigs query/modified/predicted_genes.prot results/kaiju_filterreads/Notarthropod Archaea results/
+Contigs from kaiju were 1277
+contigs_having_ORFS were 1229
+length>=100 orfs were 1176, and less than were 587
+#Archaea

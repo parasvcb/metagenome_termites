@@ -1,0 +1,2 @@
+../install_dir/kraken2-build --standard --db nt --use-ftp  &
+../install_dir/kraken2-build --standard --db nr --protein --use-ftp &

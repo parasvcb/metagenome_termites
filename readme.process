@@ -1,0 +1,216 @@
+
+SubRoutines:
+	1. create subset of prot2taxid file based on combined accessions.
+transferred input entrez queries to machines,
+	Task 1: To take merge genbank files into taxonomy wise clusters (largely 4)
+
+	Task 2: merge them in one and subject to either of mmseq 2 or something related, do the 100%, 99%
+
+	Task 3: Subset of NR db and kaiju subjection.
+	split nr headers in two file columns, one having primary accession, and other having alternate accession
+	primary will be repeated.
+	nr_headers_to_twocolFile.py does that
+
+	read the combined accession files with taxid, if match with second col of above, make a separate file, 
+	having firstcol and taxid 
+	combinedaccession wer made from '/jbodstorage/data_ph15040/projects/metagenome/dataset/taxa_wise_accessions_taxonkit'
+	cat */*.acc2taxid.txt >combined_acc2ttaxid
+	 and then 
+	accession_matchto_nrtwocol.py
+	use this file to get subset of data. 
+
+
+	
+	Read the taxon ids from taxonKit files one by one and make a dict, 
+
+	This subset will need the taxid_mentioned_first, from whole of prot2taxid, make subset first
+
+	nr_NCBI_subset.faa is the final file, here
+
+
+	kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o proteins proteins.faa
+	whhich outputs
+	"""
+	# infilename= nr_NCBI_subset.faa
+	# outfilename= kaiju_nr_subset
+	# Alphabet= ACDEFGHIKLMNPQRSTVWY
+	# nThreads= 5
+	# length= 0.000000
+	# checkpoint= 5
+	# caseSens=OFF
+	# revComp=OFF
+	# term= *
+	# revsort=OFF
+	# help=OFF
+	Sequences read time = 565.960000s
+	SLEN 58641870144
+	NSEQ 169158570
+	ALPH *ACDEFGHIKLMNPQRSTVWY
+
+	SA NCHECK=0
+	Sorting done,  time = 85882.430000s
+	"""
+
+	 (base) [ph15040@jbod kaiju_nr_subset]$ kaiju-mkfmi kaiju_nr_subset
+		# filenm= kaiju_nr_subset
+		# removecmd= NULL (null)
+		# help=OFF
+		Reading BWT from file kaiju_nr_subset.bwt ... DONE
+		BWT of length 57119443004 has been read with 169158570 sequencs, alphabet=*ACDEFGHIKLMNPQRSTVWY
+		Reading suffix array from file kaiju_nr_subset.sa ... DONE
+		Writing BWT header and SA to file  kaiju_nr_subset.fmi ... DONE
+		Constructing FM index
+		10% ... 20% ... 30% ... 40% ... 50% ... 60% ... 70% ... 80% ... 90% ... 100% ... index2 done ... 
+
+
+
+DONE
+Writing FM index to file ... DONE
+
+  !!  You can now delete files kaiju_nr_subset.bwt and kaiju_nr_subset.sa  !!
+
+  kaijux -z 60 -f kaiju_nr_subset/kaiju_nr_subset.fmi -i Termite_contig_kaiju.fasta -a greedy -e 5 -E 0.05 -v > outkaiju_nr_subset_kaijuX
+  
+   Reading index from file kaiju_nr_subset/kaiju_nr_subset.fmi
+15:57:11 Start search using 60 threads.
+15:58:58 Finished.
+
+
+  kaiju -z 60 -t -f kaiju_nr_subset/kaiju_nr_subset.fmi -i Termite_contig_kaiju.fasta -a greedy -e 5 -E 0.05 -o outkaiju_nr_subset_kaijuOnly
+
+  kaiju -z 60 -t -f kaiju_nr_subset/kaiju_nr_subset.fmi -i Termite_contig_kaiju.fasta -o outkaiju_nr_subset_kaijuOnly  
+  kaiju2table -t kaiju_nr_subset/nodes.dmp -n kaiju_nr_subset/names.dmp -p -r genus -o kaiju_summary.tsv outkaiju_nr_subset_kaijuOnly_withoutAparam_andEeparams
+  
+
+re.search(r'\bis\b', your_string)
+\b matches at beiginning or end of word
+
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import re
+>>> with open('3_Termite_protein.faa') as fin:
+...     dat=fin.read()
+... 
+>>> dat[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'^$','',dat,re.MULTILINE)
+>>> dat1[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'^$','',dat)
+>>> dat1[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'\t>.*$','',dat,re.MULTILINE)
+>>> dat1[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'\t>.*$','',dat)
+>>> dat1[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'^$\n','',dat)
+>>> dat1[:100]
+'\n\n\n\n>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEF'
+>>> dat1=re.sub(r'^$\n','',dat,flags=re.MULTILINE)
+>>> dat1[:100]
+'>gene_1|GeneMark.hmm|130_aa|-|2|391\t>NODE_520770_length_391_cov_2.17262\nHIFKDEILFTFFYDLICYISEGEFKDAD'
+>>> dat2=re.sub(r'\s+>.*$\n','',dat1,flags=re.MULTILINE)
+>>> dat2[:100]
+'>gene_1|GeneMark.hmm|130_aa|-|2|391HIFKDEILFTFFYDLICYISEGEFKDADGDNVTGSTYSDILGITGGVKKYAKAIFDNTTW\nRHPA'
+>>> dat2=re.sub(r'\s+>.*$\n','\n',dat1,flags=re.MULTILINE)
+>>> dat2[:100]
+'>gene_1|GeneMark.hmm|130_aa|-|2|391\nHIFKDEILFTFFYDLICYISEGEFKDADGDNVTGSTYSDILGITGGVKKYAKAIFDNTTW\nRHP'
+>>> with open ('3_Termite_protein.faa') as fin:
+... 
+KeyboardInterrupt
+>>> with open ('3_Termite_protein.faa.processes','w') as fout:
+...     fout.write('%s'%dat2)
+... 
+200075922
+>>> dat2=re.sub(r'\t>.*$\n','\n',dat1,flags=re.MULTILINE)
+>>> with open ('3_Termite_protein.faa.processes','w') as fout:
+...     fout.write('%s'%dat2)
+... 
+265828089
+>>> 
+
+
+
+
+kaiju2table -t kaiju_nr_subset/nodes.dmp -n kaiju_nr_subset/names.dmp -p -r genus -u -o kaiju_summary_prot_seqs.tsv outkaiju_nr_subset_protSeq.taxaAdded
+#modify kaiju output from kaiju p using  python bin/modify_kaijuP.py dataset/outkaiju_nr_subset_protSeq, then above
+
+
+
+#5_jun_2021
+running contigs with kaiju for full NCBI
+the ncbi was annotated with prot2taxid, and only first accession was kept, this was followed with '_' then the taxid.
+program bin/complete_NR_with_taxon.py, served this
+
+after that, subject that to the kaiju, and run follwing
+
+
+kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o ncbi_full_nr ../../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa
+kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o ncbi_full_nr ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa 
+# infilename= ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa
+# outfilename= ncbi_full_nr
+# Alphabet= ACDEFGHIKLMNPQRSTVWY
+# nThreads= 5
+# length= 0.000000
+# checkpoint= 5
+# caseSens=OFF
+# revComp=OFF
+# term= *
+# revsort=OFF
+# help=OFF
+Sequences read time = 772.760000s
+SLEN 82583509105
+NSEQ 216293243
+ALPH *ACDEFGHIKLMNPQRSTVWY
+
+
+SA NCHECK=0
+Sorting done,  time = 117244.610000s
+kaiju-mkfmi ncbi_full_nr
+
+(base) [ph15040@jbod kaiju_fullNR]$ kaiju-mkfmi ncbi_full_nr
+# filenm= ncbi_full_nr
+# removecmd= NULL (null)
+# help=OFF
+Reading BWT from file ncbi_full_nr.bwt ... DONE
+BWT of length 80636869908 has been read with 216293243 sequencs, alphabet=*ACDEFGHIKLMNPQRSTVWY
+Reading suffix array from file ncbi_full_nr.sa ... DONE
+Writing BWT header and SA to file  ncbi_full_nr.fmi ... DONE
+Constructing FM index
+10% ... 20% ... 30% ... 40% ... 50% ... 60% ... 70% ... 80% ... 90% ... 100% ... index2 done ... 
+DONE
+Writing FM index to file ... DONE
+
+  !!  You can now delete files ncbi_full_nr.bwt and ncbi_full_nr.sa  !!
+
+
+
+  kaiju -z 60 -t kaiju_fullNR/nodes.dmp -f kaiju_fullNR/ncbi_full_nr.fmi -i Termite_contig_kaiju.nuc.fasta -o outkaiju_nr_Full_withoutAparam
+
+  kaiju2table -t kaiju_nr_subset/nodes.dmp -n kaiju_nr_subset/names.dmp -p -r genus -o kaiju_summary_fullNR.tsv outkaiju_nr_Full_withoutAparam
+
+  Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 2461416 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 654845 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+
+
+
+
+
+
+
+
+Analysis section
+bin/A1_contigFile_to_length_Distribution.py, getting the contigs length and their overall distribution
+
+python bin/A2_adding_values_from_dict_to_anotherFile.py results/kaiju_filterreads/kaiju_filetered_length300plus_classifiedwithcompleteTaxa_excludedbothMeganKaiju_NotArthropod_contig_wise_classification_kaiju_grt300 results/hmmer_results_raw.txt results/cazy_with_taxonomy_A2
+Above was used to update the taxonomy information to the results from cazy!

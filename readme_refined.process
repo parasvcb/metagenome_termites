@@ -1,0 +1,123 @@
+# Data Default
+
+/jbodstorage/data_ph15040/projects/metagenome/dataset/query
+	3_Termite_protein.faa  3_Termite_protein.faa.processes  Termite_contig_kaiju.nuc.fasta
+	(base) [ph15040@jbod metagenome]$ head dataset/query/*
+	==> dataset/query/3_Termite_protein.faa <==
+		>gene_1|GeneMark.hmm|130_aa|-|2|391     >NODE_520770_length_391_cov_2.17262
+		HIFKDEILFTFFYDLICYISEGEFKDADGDNVTGSTYSDILGITGGVKKYAKAIFDNTTW
+		RHPATIWEEWNNNGVIDEDYLTGEESKKMLGFLLSGDGAQLVYQVVDDEKYKRMGYHQDG
+		EKIIAFDNTS
+	==> dataset/query/3_Termite_protein.faa.processes <==
+		>gene_1|GeneMark.hmm|130_aa|-|2|391
+		HIFKDEILFTFFYDLICYISEGEFKDADGDNVTGSTYSDILGITGGVKKYAKAIFDNTTW
+		RHPATIWEEWNNNGVIDEDYLTGEESKKMLGFLLSGDGAQLVYQVVDDEKYKRMGYHQDG
+		EKIIAFDNTS
+		>gene_2|GeneMark.hmm|92_aa|-|1|276
+		MKHPWSPTYDSESRVLILGSFPSPKSRELGFYYGNPQNLFWDVLADSLGVPRLSGSAPAG
+		AGSPGACLSDLVTDGTGFPATRLPNLAEKKAF
+		>gene_3|GeneMark.hmm|186_aa|-|3|560
+		MMEIPCYPQFVPLSIDLKPALHPHLSLTPDGVSEYTFSNLYLFRRRYGYQISIVPGRTLV
+		ISGERDGKRFFMTPCALPDRATLMDLFQNHDYWKGISDSILQPNQEILTQWDIEVQEDRD
+	==> dataset/query/Termite_contig_kaiju.nuc.fasta <==
+		>NODE_556149_length_377_cov_2.23292
+		GTACACACGAGCCAGGGGCTTCATCTCCACACCAAAGAATGGAGATCTTGGGTCACCTGGGTAGCTCGAAGTGATCTCTTGGATTGTCTCGCGTGGCTTCGTAGGCATATCAGGTGACTGAAAATAACAACTAATTGTGGATCTGCCAAGACATGGAACAGGGAATTTTTTAAAGGCAAAGGTGCCCCTGTGTATGCCACAATATCATAGATGGTGCTAGATGGAGATTACTGGTCAGCTTCACTTCCCGGCCGCCTGCTTCCTGGGTGAAAGGCCCTCATACCCATTGGACAGGAGGCTGAGTGGACATCAGAGACAGTCTGGACGTTTCTGGAGAAGAGAAAATCTCTTACCCCTGCTGGGAATCGACCCCTGGG
+		>NODE_457322_length_420_cov_2.60274
+		CTGATATTTATGCCCGATTTTAACCAAATTTAGATAGTCTCAATAGATTTTCATGAAACTCCCTAATACCAAATTTCAAGGATATCGTTCCGACGGGAGCCACGCTGACATGCGGACAGACGGACAAACCAACGGACGGACGGACATGAGAAAGCTGACAAGCGATTTTCGCGACGATGCGAACGCTCCCACAAACAGGGCGCTACTGGATATATCTAGGCCATGACAGGCACCAGTGGCGGGTTCTTATGCAACAGTTAATGAACTGATGCGTTCCATGAAAAGTCTGTGATTTTCTGGCCAAACGAGCTAGTCTTAGAATCCAAAGAATGATTCTGCCACATTCAGAAAGCGAGTAAATGAGTCAATTAGTCACCCACAAGACGACCGGGCAGTGGGTCAGTCCTTACCCGAAACTGC
+		>NODE_623348_length_355_cov_2.28
+		ATCCACGGCCGTCGATTGTAACTCTCCTAATATGACGTGGATATTTGTTATATAGAACTTTTACAACGCAGAAGGGCACACTTCAGGTACTCTTATCTTCAGTTTCTTTCTTGAAAATGGTCACGAATTTGAAATATAAGGAAAAGAGTAGAGGGAATCTGCCGGAATTACAAATCGGTGCGGACTTGCTAACGACCGAAATATTCCGTTCCAGTGGACGTATAAAATGAAACACCTCACGCGTTTTTACACAAATACGCATTATGACAGTGGGTGGAGAGATCGACCCTTCATGATTACCGCTTCACTGCATTTTGGTAATTACCTTTGAACAGAATTCACTGCACTGCAATAA
+		>NODE_1326816_length_243_cov_1.6117
+		GTGGCATTATGTCATTGTTCGTACAAAAGTAAACACAGAATATAAATTTATTGCACGATGCGTGTCGACTAAAAATGAATTATCACGTGCTTTTGATGCGTAAATTTCCTCTAGTAAAATTCTCACACATACACAGTTCGTCATACTTTAAAATCCATGTACTGCTTCCTATGGTTGGGTTGAGGCTGTGCATATTTGTGCAATAGCGGACTGCATAACCGCATAGTGTTAAAGGATGGTATG
+		>NODE_520770_length_391_cov_2.17262
+		CGGAGGTATTGTCAAACGCAATAATCTTTTCTCCATCCTGATGATAACCCATTCGTTTGTATTTCTCATCATCGACAACCTGGTATACCAGCTGTGCTCCATCTCCGGAAAGTAGGAAACCGAGCATTTTTTTTGATTCTTCTCCGGTAAGGTAGTCTTCATCTATAACCCCGTTGTTATTCCATTCTTCCCAGATTGTAGCGGGATGCCGCCAGGTTGTATTGTCAAAAATTGCTTTTGCATATTTCTTTACCCCGCCTGTAATTCCAAGTATATCACTGTAAGTTGAGCCTGTAACGTTATCCCCGTCAGCATCCTTAAATTCACCTTCACTGATATAGCAGATTAAATCATAGAAGAAAGTGAATAATATTTCATCTTTGAAGATATG
+
+
+
+
+
+
+
+
+#5_jun_2021
+PENDING: running contigs with kaiju for full NCBI, the ncbi was annotated with prot2taxid, and only first accession was kept, this was followed with '_' then the taxid.
+program bin/complete_NR_with_taxon.py, served this
+	#https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
+	alternate programs updated:
+	bin/archive/nr_headers_to_twocolFile.py #strip nr main file into headers for quick reading and then to the two column based file, 
+	bin/archive/nr_subset.py #that two column based file and prot2taxid was used later in this to parse the main NR file into the kaiju subset
+
+#Kaiju 
+->	kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o ncbi_full_nr ../../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa
+->	kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o ncbi_full_nr ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa 
+	# infilename= ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa
+	# outfilename= ncbi_full_nr
+	# Alphabet= ACDEFGHIKLMNPQRSTVWY
+	# nThreads= 5
+	# length= 0.000000
+	# checkpoint= 5
+	# caseSens=OFF
+	# revComp=OFF
+	# term= *
+	# revsort=OFF
+	# help=OFF
+	Sequences read time = 772.760000s
+	SLEN 82583509105
+	NSEQ 216293243
+	ALPH *ACDEFGHIKLMNPQRSTVWY
+	#OUTPUTS: ncbi_full_nr.bwt, ncbi_full_nr.sa
+
+
+	SA NCHECK=0
+	Sorting done,  time = 117244.610000s
+	kaiju-mkfmi ncbi_full_nr
+
+->	kaiju-mkfmi ncbi_full_nr
+	# filenm= ncbi_full_nr
+	# removecmd= NULL (null)
+	# help=OFF
+	Reading BWT from file ncbi_full_nr.bwt ... DONE
+	BWT of length 80636869908 has been read with 216293243 sequencs, alphabet=*ACDEFGHIKLMNPQRSTVWY
+	Reading suffix array from file ncbi_full_nr.sa ... DONE
+	Writing BWT header and SA to file  ncbi_full_nr.fmi ... DONE
+	Constructing FM index
+	10% ... 20% ... 30% ... 40% ... 50% ... 60% ... 70% ... 80% ... 90% ... 100% ... index2 done ... 
+	DONE
+	Writing FM index to file ... DONE
+
+	!!  You can now delete files ncbi_full_nr.bwt and ncbi_full_nr.sa  !!
+	OUTPUT: ncbi_full_nr.fmi
+
+->	kaiju -z 60 -t kaiju_fullNR/nodes.dmp -f kaiju_fullNR/ncbi_full_nr.fmi -i Termite_contig_kaiju.nuc.fasta -o outkaiju_nr_Full_withoutAparam
+->	kaiju2table -t kaiju_nr_subset/nodes.dmp -n kaiju_nr_subset/names.dmp -p -r genus -o kaiju_summary_fullNR.tsv outkaiju_nr_Full_withoutAparam
+
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 2461416 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 654845 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+	Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+
+## Kaiju DB Files are in 
+ls dataset/kaiju_fullNR/ -lht
+total 284G
+-rw-rw-r--. 1 ph15040 ph15040 108G Jun  7  2021 ncbi_full_nr.fmi
+-rw-rw-r--. 1 ph15040 ph15040  76G Jun  7  2021 ncbi_full_nr.bwt
+-rw-rw-r--. 1 ph15040 ph15040  21G Jun  7  2021 ncbi_full_nr.sa
+-rw-rw-r--. 1 ph15040 ph15040  80G Jun  7  2021 nr_NCBI_completeAnnotatedWithTaxon.faa
+-rwxrwxr-x. 1 ph15040 ph15040 153M Jun  5  2021 nodes.dmp
+-rwxrwxr-x. 1 ph15040 ph15040 197M Jun  5  2021 names.dmp
+
+
+# Analysis section
+kaiju_summary_fullNR.tsv #this in dataset was used in this analysis section
+
+
+
+bin/A1_contigFile_to_length_Distribution.py, getting the contigs length and their overall distribution
+
+python bin/A2_adding_values_from_dict_to_anotherFile.py results/kaiju_filterreads/kaiju_filetered_length300plus_classifiedwithcompleteTaxa_excludedbothMeganKaiju_NotArthropod_contig_wise_classification_kaiju_grt300 results/hmmer_results_raw.txt results/cazy_with_taxonomy_A2
+Above was used to update the taxonomy information to the results from cazy!

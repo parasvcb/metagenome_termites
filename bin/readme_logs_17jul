@@ -1,0 +1,157 @@
+The project organization is as follows:
+
+bin/
+    bin/readme_logs_17jul
+    bin/accession_matchto_nrtwocol.py
+    bin/benchmark_runs.py
+    bin/common_modules.py
+    bin/complete_NR_with_taxon_p2.py
+    bin/complete_NR_with_taxon_p3.py
+    bin/complete_NR_with_taxon.py
+    bin/contigs_to_orfs.py
+    bin/filtering_modifying_kaiju_from_parentFiles.py
+    bin/filtering_taxogroups_kaiju.py
+    bin/modify_kaijuP.py
+    bin/multifasta_tochunks.py
+    bin/nr_headers_to_twocolFile.py
+    bin/nr_subset.py
+    bin/ntdb_blast_chunks_metagenome.py
+    bin/ntdb_blast_chunks_metagenome_format7.py
+    bin/ORF_filtering.py
+    bin/parsing_outfmt7.py
+    bin/reads_length_filter.py
+    bin/stats_aftermetageneMarksv1_kaiju_fraction_oncontigGrt300AndMetageneFilter_level.py
+    bin/taxidProt_toDict.py
+    bin/stats_aftermetageneMarksv2_kaiju_fraction_oncontigGrt300_level.py
+    bin/temp_change_header_2.py
+    bin/temp_change_header.py
+# the above folder has all the scripts related to the work
+
+
+dataset/
+    dataset/kaiju/
+        dataset/kaiju
+        dataset/kaiju/kaiju_db_nr_euk_2021-02-24.tgz
+        dataset/kaiju/wget-log
+
+    dataset/Termite_contig_kaiju.nuc.fasta
+    dataset/summarykaiju_fraction_Grt300contigs
+    dataset/summaryContigIdsInterest(>300)_noOrfKnowledge.ORFProteinsgrt100aa
+    dataset/summaryContigIdsInterest(>300)_noOrfKnowledge.contigs
+    dataset/summary
+    dataset/outkaiju_nr_Full_withoutAparam
+    dataset/nonarthropodphyla
+    dataset/metamonada1
+    dataset/metageneMArks.tagsingle
+    dataset/metageneMArks.tagnone
+    dataset/metageneMArks.tagboth
+    dataset/metageneMArks.summ
+    dataset/metageneMArks.stats.summ
+    dataset/metageneMArks.stats
+    dataset/metageneMArks
+    dataset/kaiju_summary_fullNR.tsv
+    dataset/contig300filter.tsv
+    dataset/arthropod_kaiju_megan_nodeids
+    dataset/all_taxa_non_arthropo_species_tree
+    dataset/taxonkit_temp/
+        #So many taxa files
+    dataset/kaiju_filterreads/
+        dataset/kaiju_filterreads/archaea
+        dataset/kaiju_filterreads/arthropod
+        dataset/kaiju_filterreads/bacteria
+        dataset/kaiju_filterreads/fungi
+        dataset/kaiju_filterreads/metamonada
+        dataset/kaiju_filterreads/Notarthropod
+        dataset/kaiju_filterreads/Notarchaea
+        dataset/kaiju_filterreads/Notarthropod_contig_wise_classification_kaiju_grt300
+        dataset/kaiju_filterreads/Notarthropod_summary_kaiju_grt300
+        dataset/kaiju_filterreads/Notbacteria
+        dataset/kaiju_filterreads/Notfungi
+        dataset/kaiju_filterreads/Notmetamonada
+    
+kraken/
+query/
+source_db/
+
+keeping all the reads in the query folder with the raw and modified category
+
+
+very first we ran all the contigs against the NCBI
+and added the taxa to all the contigs
+
+
+
+1. Kaiju section
+    Started with series of kaiju section and its related programs:
+    From NCBI or taxonkit downloaded the taxa associated with the major taxids and their proteins, 
+    into the file  
+    #dataset/taxa_wise_accessions_taxonkit/combined_acc2ttaxid
+    A0A024B7W1.1    2043570
+    A0A097SRV6.1    10498
+    A0A097SRX3.1    10498
+    A0A097SRX8.1    10498
+    A0A0H5AXT3.1    1678082
+    A0A0S2SZW1.1    2654645
+    A0A0S2SZX3.1    2654645
+    A0A0S2T050.1    2654645
+
+    The above file was screened againt the NR's protein taxonomy set (var: twocolfile) to see if accession has been there or not, if yes the subset  and noted matches were written to #results/nr_headers_subsetneeded_withtax
+    using the script bin/S1-kaijuSec__accession_matchto_nrtwocol.py
+
+
+    In another approach the program #bin/P1-kaijuSec__annotate_NR_with_taxon.py taken the complete prot2acc set and save all athe accessions their with their taxa, next it will screen all the NR fasta files if the accesion has their name speciifed with the atax and modifies the file, the modified file was usually kept in the dataset/kaiju_fullNR/nr_NCBI_completeAnnotatedWithTaxon.faa
+
+    kaiju was run with following:
+        kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o ncbi_full_nr ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa 
+        # infilename= ../../dataset/nr_NCBI_completeAnnotatedWithTaxon.faa
+        # outfilename= ncbi_full_nr
+        # Alphabet= ACDEFGHIKLMNPQRSTVWY
+        # nThreads= 5
+        # length= 0.000000
+        # checkpoint= 5
+        # caseSens=OFF
+        # revComp=OFF
+        # term= *
+        # revsort=OFF
+        # help=OFF
+        Sequences read time = 772.760000s
+        SLEN 82583509105
+        NSEQ 216293243
+        ALPH *ACDEFGHIKLMNPQRSTVWY
+
+        (base) [ph15040@jbod kaiju_fullNR]$ kaiju-mkfmi ncbi_full_nr
+        # filenm= ncbi_full_nr
+        # removecmd= NULL (null)
+        # help=OFF
+        Reading BWT from file ncbi_full_nr.bwt ... DONE
+        BWT of length 80636869908 has been read with 216293243 sequencs, alphabet=*ACDEFGHIKLMNPQRSTVWY
+        Reading suffix array from file ncbi_full_nr.sa ... DONE
+        Writing BWT header and SA to file  ncbi_full_nr.fmi ... DONE
+        Constructing FM index
+        10% ... 20% ... 30% ... 40% ... 50% ... 60% ... 70% ... 80% ... 90% ... 100% ... index2 done ... 
+        DONE
+        Writing FM index to file ... DONE
+
+        !!  You can now delete files ncbi_full_nr.bwt and ncbi_full_nr.sa  !!
+        kaiju -z 60 -t kaiju_fullNR/nodes.dmp -f kaiju_fullNR/ncbi_full_nr.fmi -i Termite_contig_kaiju.nuc.fasta -o outkaiju_nr_Full_withoutAparam
+
+        kaiju2table -t kaiju_nr_subset/nodes.dmp -n kaiju_nr_subset/names.dmp -p -r genus -o kaiju_summary_fullNR.tsv outkaiju_nr_Full_withoutAparam
+
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 2461416 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 654845 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 85974 is not contained in kaiju_nr_subset/nodes.dmp.
+        Warning: Taxon ID 2794348 is not contained in kaiju_nr_subset/nodes.dmp.
+
+2. Parsing the metagenemarksResults
+    The program P2-metageneMark_parsing.py will take in the metagenemark preicted gene File and for everycontig, it will list the detailed list headeof oRF with their tyoes (2,1,0) and length in default file, 
+    in .summ file it will give the contigs followed by type of protein genes found in them and
+    and in .tag(both/none/single) contigs having such ORF;s 
+
+3. splitting kaiju into two sets, getting rid of arthropods,
+    #P3-kaijuSec__filtering_taxogroups_into2, takes in both of the files output, raw and aummaryu from kaiju and based on prsence of group in both splits them into two sets, contigs ahving such group in classification and contigs that doesnt, 
